@@ -72,6 +72,10 @@
     "webpack-hot-middleware": "^2.20.0"
   },
   "dependencies": {
+    "electron-is": "^3.0.0",
+    "electron-log": "^3.0.6",
+    "electron-store": "^3.3.0",
+    "forever-monitor": "^1.7.1",
     "fs-extra": "^5.0.0",
     "getmac": "^1.4.1",
     "md5-file": "^3.2.3",

@@ -8,13 +8,14 @@ function checkQuit(mainWindow, event) {
     type: 'info',
     title: '关闭确认',
     message: '确认要最小化程序到托盘吗？',
-    buttons: ['确认', '关闭程序']
+    buttons: ['确认', '关闭程序'],
   };
   dialog.showMessageBox(options, index => {
     if (index === 0) {
       event.preventDefault();
       mainWindow.hide();
     } else {
+      global.engine.stop();
       hasQuit = true;
       mainWindow = null;
       app.exit(0);

@@ -7,8 +7,37 @@ import handleMessage from './event/message';
 import onCrashed from './protect/crashed';
 import createTray from './protect/tray';
 import autoStart from './protect/autoStart';
+import Aria2 from './engine/aria2';
+import Config from './config';
 
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
+
+const config = new Config();
+const engine = new Aria2({
+  systemConfig: config.getSystemConfig(),
+  userConfig: config.getUserConfig(),
+});
+global.engine = engine;
+function startEngine() {
+  try {
+    engine.start();
+  } catch (err) {
+    const { message } = err;
+
+    dialog.showMessageBox(
+      {
+        type: 'error',
+        title: 'app.system-error-title',
+        message: message,
+      },
+      () => {
+        setTimeout(() => {
+          app.quit();
+        }, 100);
+      },
+    );
+  }
+}
 
 let mainWindow;
 
@@ -53,6 +82,7 @@ app.on('ready', () => {
     .then(() => onCrashed())
     .then(() => handleQuit())
     .then(() => createTray())
+    .then(() => startEngine())
     .then(() => {
       if (process.platform === 'win32') {
         autoStart();

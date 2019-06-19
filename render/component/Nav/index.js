@@ -22,7 +22,7 @@ class Nav extends Component {
 
   render() {
     return (
-      <div style={{ width: 220, height: '100%', zIndex: 999 }}>
+      <div style={{ width: 160, height: '100%', zIndex: 999 }}>
         <div className="iconContainer">
           <img src={icon} className="icon" />
           <span className="titleText">icezeros</span>
