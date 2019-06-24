@@ -67,6 +67,7 @@
     "electron-is": "^3.0.0",
     "electron-log": "^3.0.6",
     "electron-store": "^3.3.0",
+    "forever-monitor": "^1.7.1",
     "getmac": "^1.4.6",
     "http-proxy": "^1.17.0",
     "lodash": "^4.17.11",

@@ -7,25 +7,31 @@ import { resolve, join } from 'path';
 import forever from 'forever-monitor';
 import logger from '../logger';
 // import { getI18n } from '@/ui/Locale';
-import { getEngineBinPath, getSessionPath, transformConfig } from '../utils/path';
+import {
+  getEngineBinPath,
+  getSessionPath,
+  transformConfig,
+} from '../utils/path';
+let instance = null;
 
 export default class Aria2 {
-  static instance = null;
-
   constructor(options = {}) {
     this.options = options;
-
     // this.i18n = getI18n();
+    console.log('============ options =============');
+    console.log(options);
     this.systemConfig = options.systemConfig;
     this.userConfig = options.userConfig;
   }
 
   getStartSh() {
+    console.log('============ 112 =============');
+    console.log(1111);
     const { platform } = process;
     let basePath = resolve(app.getAppPath(), '..');
 
     if (is.dev()) {
-      basePath = resolve(__dirname, `../external/${platform}`);
+      basePath = resolve(__dirname, `../../../extra/${platform}`);
     }
 
     const binName = getEngineBinPath(platform);
@@ -38,7 +44,10 @@ export default class Aria2 {
     let binPath = join(basePath, `/engine/${binName}`);
     const binIsExist = existsSync(binPath);
     if (!binIsExist) {
-      logger.error('[==== ice-speedy ====] engine bin is not exist===>', binPath);
+      logger.error(
+        '[==== ice-speedy ====] engine bin is not exist===>',
+        binPath
+      );
       throw new Error('app.engine-missing-message');
     }
 
@@ -47,14 +56,19 @@ export default class Aria2 {
     let sessionPath = this.userConfig['session-path'] || getSessionPath();
     const sessionIsExist = existsSync(sessionPath);
 
-    let result = [`${binPath}`, `--conf-path=${confPath}`, `--save-session=${sessionPath}`];
+    let result = [
+      `${binPath}`,
+      `--conf-path=${confPath}`,
+      `--save-session=${sessionPath}`,
+    ];
     if (sessionIsExist) {
       result = [...result, `--input-file=${sessionPath}`];
     }
 
     const extraConfig = transformConfig(this.systemConfig);
     result = [...result, ...extraConfig];
-
+    console.log('============ this.systemConfig =============');
+    console.log(this.systemConfig);
     return result;
   }
 

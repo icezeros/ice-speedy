@@ -8,6 +8,8 @@ export default class ConfigManager {
   }
 
   init() {
+      console.log('============ init =============');
+      console.log(init);
     this.systemConfig = new Store(init.system);
     this.userConfig = new Store(init.user);
   }

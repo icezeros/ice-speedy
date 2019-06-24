@@ -8,6 +8,9 @@ import ConfigManager from './config';
 
 import logger from './logger';
 import WindowManager from './window/index';
+
+import Aria2 from './engine/aria2';
+
 import handleQuit from './event/quit';
 import handleMessage from './event';
 import onCrash from './system/crash';
@@ -23,38 +26,23 @@ export default class Application extends EventEmitter {
     this.windowManager = this.windowManager = new WindowManager({
       userConfig: this.configManager.getUserConfig(),
     });
+
     this.init();
-    // this.makeSingleInstance(() => {
-    //   //   this.start('main');
-    //   console.log('============ 1111 =============');
-    //   console.log(1111);
-    //   this.init();
-    // });
   }
 
   init() {
     this.initWindowManager();
-    // this.handelAppReady();
-    // handleQuit();
-    // handleMessage();
+    this.initAria2Server();
   }
-  //   handelAppReady() {
-  //     app.on('ready', () => {
-  //       this.showPage('main');
-  //       global.mainId = this.windowManager.getWindow('main').id;
-  //       //   global.application = new Application();
-  //       //   const { openedAtLogin } = this;
-  //       //   global.application.start('index', {
-  //       //     openedAtLogin,
-  //       //   });
 
-  //       //   global.application.on('ready', () => {
-  //       //     this.sendUrlToApplication();
+  initAria2Server() {
+    this.configManager.reset();
+    this.aria2 = new Aria2({
+      systemConfig: this.configManager.getSystemConfig(),
+      userConfig: this.configManager.getUserConfig(),
+    });
+  }
 
-  //       //     this.sendFileToApplication();
-  //       //   });
-  //     });
-  //   }
   initWindowManager() {
     this.windowManager.on('window-resized', data => {
       this.storeWindowState(data);
@@ -84,12 +72,11 @@ export default class Application extends EventEmitter {
 
   start(page, options = {}) {
     this.showPage(page, options);
+    this.aria2.start();
   }
 
   showPage(page, options = {}) {
     const { openedAtLogin } = options;
-    console.log('============ 111 =============');
-    console.log(111);
     const win = this.windowManager.openWindow(page, {
       hidden: openedAtLogin,
     });
@@ -123,7 +110,7 @@ export default class Application extends EventEmitter {
   }
 
   stop() {
-    // this.engine.stop()
+    this.aria2.stop();
     // this.energyManager.stopPowerSaveBlocker()
     // this.trayManager.destroy()
   }

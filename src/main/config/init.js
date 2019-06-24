@@ -22,7 +22,7 @@ export default {
       'max-overall-upload-limit': '128K',
       'min-split-size': '1M',
       pause: true,
-      'rpc-listen-port': 16800,
+      'rpc-listen-port': 11800,
       'rpc-secret': '',
       'seed-time': 60,
       split: 16,
